@@ -12,16 +12,7 @@
 
 %define tde_pkg soundkonverter
 %define tde_prefix /opt/trinity
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_mandir %{tde_datadir}/man
-%define tde_tdeappdir %{tde_datadir}/applications/tde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
+
 
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
@@ -43,27 +34,20 @@ URL:		http://potracegui.sourceforge.net
 
 License:	GPLv2+
 
-#Vendor:		Trinity Desktop
-#Packager:	Francois Andriot <francois.andriot@free.fr>
-
-Prefix:		%{tde_prefix}
 
 Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/multimedia/%{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}.tar.xz
 
 BuildSystem:	  cmake
+
 BuildOption:    -DCMAKE_BUILD_TYPE="RelWithDebInfo"
-BuildOption:    -DCMAKE_SKIP_RPATH=OFF
-BuildOption:    -DCMAKE_SKIP_INSTALL_RPATH=OFF
-BuildOption:    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
-BuildOption:    -DCMAKE_INSTALL_RPATH="%{tde_libdir}"
 BuildOption:    -DCMAKE_INSTALL_PREFIX=%{tde_prefix}
-BuildOption:    -DINCLUDE_INSTALL_DIR=%{tde_tdeincludedir}
-BuildOption:    -DLIB_INSTALL_DIR=%{tde_libdir}
-BuildOption:    -DSHARE_INSTALL_PREFIX=%{tde_datadir}
+BuildOption:    -DINCLUDE_INSTALL_DIR=%{tde_prefix}/include/tde
+BuildOption:    -DSHARE_INSTALL_PREFIX=%{tde_prefix}/share
 BuildOption:    -DWITH_ALL_OPTIONS=ON
-%{?!with_dvb:BuildOption:    -DWITH_DVB=OFF}
-%{?!with_lame:BuildOption:    -DWITH_LAME=OFF}
-%{?!with_xcb:BuildOption:    -DWITH_XCB=OFF}
+BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
+BuildOption:    -DWITH_DVB=%{?!with_dvb:OFF}%{?with_dvb:ON}
+BuildOption:    -DWITH_LAME=%{?!with_lame:OFF}%{?with_lame:ON}
+BuildOption:    -DWITH_XCB=%{?!with_xcb:OFF}%{?with_xcb:ON}
 BuildOption:    -DBUILD_ALL=ON
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
@@ -125,7 +109,7 @@ See the 'trinity-soundkonverter' package for more information.
 
 %conf -p
 unset QTDIR QTINC QTLIB
-export PATH="%{tde_bindir}:${PATH}"
+export PATH="%{tde_prefix}/bin:${PATH}"
 
 
 %install -a
@@ -135,28 +119,28 @@ export PATH="%{tde_bindir}:${PATH}"
 %files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING README
-%{tde_bindir}/soundkonverter
-%{tde_tdeappdir}/soundkonverter.desktop
-%{tde_datadir}/apps/konqueror/servicemenus/audiocd_extract_with_soundkonverter.desktop
-%{tde_datadir}/apps/soundkonverter
-%exclude %{tde_datadir}/apps/soundkonverter/amarokscript/
-%{tde_tdedocdir}/HTML/en/soundkonverter/
-%{tde_datadir}/icons/hicolor/*/apps/soundkonverter*.png
-%{tde_datadir}/mimelnk/application/x-la.soundkonverter.desktop
-%{tde_datadir}/mimelnk/application/x-ofc.soundkonverter.desktop
-%{tde_datadir}/mimelnk/application/x-ofr.soundkonverter.desktop
-%{tde_datadir}/mimelnk/application/x-ofs.soundkonverter.desktop
-%{tde_datadir}/mimelnk/application/x-shorten.soundkonverter.desktop
-%{tde_datadir}/mimelnk/audio/amr.soundkonverter.desktop
-%{tde_datadir}/mimelnk/audio/x-ape.soundkonverter.desktop
-%{tde_datadir}/mimelnk/audio/x-bonk.soundkonverter.desktop
-%{tde_datadir}/mimelnk/audio/x-pac.soundkonverter.desktop
-%{tde_datadir}/mimelnk/audio/x-tta.soundkonverter.desktop
-%{tde_datadir}/mimelnk/audio/x-wavpack-correction.soundkonverter.desktop
-%{tde_datadir}/mimelnk/audio/x-wavpack.soundkonverter.desktop
-%{tde_datadir}/mimelnk/video/x-flv.soundkonverter.desktop
+%{tde_prefix}/bin/soundkonverter
+%{tde_prefix}/share/applications/tde/soundkonverter.desktop
+%{tde_prefix}/share/apps/konqueror/servicemenus/audiocd_extract_with_soundkonverter.desktop
+%{tde_prefix}/share/apps/soundkonverter
+%exclude %{tde_prefix}/share/apps/soundkonverter/amarokscript/
+%{tde_prefix}/share/doc/tde/HTML/en/soundkonverter/
+%{tde_prefix}/share/icons/hicolor/*/apps/soundkonverter*.png
+%{tde_prefix}/share/mimelnk/application/x-la.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/application/x-ofc.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/application/x-ofr.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/application/x-ofs.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/application/x-shorten.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/audio/amr.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/audio/x-ape.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/audio/x-bonk.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/audio/x-pac.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/audio/x-tta.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/audio/x-wavpack-correction.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/audio/x-wavpack.soundkonverter.desktop
+%{tde_prefix}/share/mimelnk/video/x-flv.soundkonverter.desktop
 
 %files amarok
 %defattr(-,root,root,-)
-%{tde_datadir}/apps/soundkonverter/amarokscript/
+%{tde_prefix}/share/apps/soundkonverter/amarokscript/
 
