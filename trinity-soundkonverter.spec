@@ -4,10 +4,6 @@
 %bcond xcb 1
 
 # TDE variables
-%if "%{?tde_version}" == ""
-%define tde_version 14.1.5
-%endif
-
 %define tde_pkg soundkonverter
 %define tde_prefix /opt/trinity
 
@@ -17,14 +13,14 @@
 %define _disable_rebuild_configure 1
 
 # fixes error: Empty %files file …/debugsourcefiles.list
-%define _debugsource_template %{nil}
+%undefine _debugsource_template
 
 %define tarball_name %{tde_pkg}-trinity
 
 
 Name:		trinity-%{tde_pkg}
-Version:	0.3.8
-Release:	%{?tde_version:%{tde_version}_}3
+Version:	14.1.6
+Release:	1
 Summary:	Audio converter frontend for Trinity
 Group:		Application/Multimedia
 URL:		http://potracegui.sourceforge.net
@@ -32,7 +28,7 @@ URL:		http://potracegui.sourceforge.net
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/multimedia/%{tarball_name}-%{tde_version}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/applications/multimedia/%{tarball_name}-%{version}.tar.xz
 
 BuildSystem:	  cmake
 
@@ -47,9 +43,9 @@ BuildOption:    -DWITH_LAME=%{?!with_lame:OFF}%{?with_lame:ON}
 BuildOption:    -DWITH_XCB=%{?!with_xcb:OFF}%{?with_xcb:ON}
 BuildOption:    -DBUILD_ALL=ON
 
-BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
-BuildRequires:	trinity-tdebase-devel >= %{tde_version}
-BuildRequires:  trinity-tde-cmake
+BuildRequires:	trinity-tdelibs-devel >= %{version}
+BuildRequires:	trinity-tdebase-devel >= %{version}
+BuildRequires:  trinity-tde-cmake >= %{version}
 BuildRequires:	desktop-file-utils
 
 %{!?with_clang:BuildRequires:	gcc-c++}
@@ -95,7 +91,7 @@ See README.Debian for more informations on supported formats.
 %package amarok
 Summary:		audio converter frontend for Trinity (Amarok script)
 Group:			Application/Multimedia
-Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:		%{name} = %{EVRD}
 Requires:		trinity-amarok
 
 %description amarok
